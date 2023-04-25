@@ -18,12 +18,12 @@ USE BelleFleur;
 
 CREATE TABLE client (
     client_id int NOT NULL PRIMARY KEY,
-    client_prenom text,
-    client_nom text,
+    client_prenom VARCHAR(50),
+    client_nom VARCHAR(50),
     client_email varchar(50),
-    client_adresse text,
-    client_carte_de_credit text,
-    client_pass text
+    client_adresse VARCHAR(255),
+    client_carte_de_credit VARCHAR(50),
+    client_pass VARCHAR(200)
 );
 
 CREATE TABLE reduction (
@@ -35,28 +35,28 @@ CREATE TABLE reduction (
 
 CREATE TABLE magasin (
     magasin_id int NOT NULL PRIMARY KEY,
-    magasin_nom text,
-    magasin_adresse text
+    magasin_nom VARCHAR(50),
+    magasin_adresse VARCHAR(255),
 );
 
 CREATE TABLE bouquet (
     bouquet_id int NOT NULL PRIMARY KEY,
-    bouquet_nom text,
+    bouquet_nom VARCHAR(50),
     bouquet_prix decimal,
-    bouquet_description text,
-    bouquet_categorie text
+    bouquet_description VARCHAR(255),
+    bouquet_categorie ENUM('Toute occasion', 'St-Valentin', 'Fête des mères', 'Mariage', 'Personnalisé')
 );
 
 CREATE TABLE commande (
     commande_id int NOT NULL PRIMARY KEY,
-    commande_adresse_livraison text,
+    commande_adresse_livraison VARCHAR(255),
     commande_date_livraison_desiree datetime,
-    commande_etat varchar(10),
+    commande_etat ENUM('VINV', 'CC', 'CPAV', 'CAL', 'CL'),
     commande_date_creation datetime,
     commande_prix decimal,
     commande_reduction decimal,
     client_id int,
-    bouquet_id text,
+    bouquet_id int,
     magasin_id int,
     reduction_id int,
     FOREIGN KEY (client_id) REFERENCES client (client_id),
@@ -67,20 +67,20 @@ CREATE TABLE commande (
 
 CREATE TABLE produit (
     produit_id int NOT NULL PRIMARY KEY,
-    produit_nom text,
-    produit_type varchar(15),
+    produit_nom varchar(50),
+    produit_type ENUM('fleur', 'accessoire'),
     produit_prix decimal,
-    produit_categorie enum('Fleur Classique', 'Fleur exotique', 'Accessoire'),
-    produit_disponibilite_mois text, -- "1,2,3,9,10,11,12" / "*"
+    produit_categorie ENUM('Fleur Classique', 'Fleur exotique', 'Accessoire'),
+    produit_disponibilite_mois VARCHAR(50), -- "1,2,3,9,10,11,12" / "*"
 );
 
 CREATE TABLE employe (
     employe_id int NOT NULL PRIMARY KEY,
     employe_proprietaire bool,
     employe_email varchar(50),
-    employe_pass text,
-    employe_prenom text,
-    employe_nom text,
+    employe_pass VARCHAR(200),
+    employe_prenom varchar(50),
+    employe_nom varchar(50),
     magasin_id int,
     FOREIGN KEY (magasin_id) REFERENCES magasin (magasin_id)
 );
@@ -108,7 +108,7 @@ CREATE TABLE stocks (
 -- TRIGGERS
 --
 
--- Trigger 1: After a new magasin is created
+-- Trigger 1: Creer un stock pour un nouveau magasin
 CREATE TRIGGER insert_zero_stock_for_new_magasin
 AFTER INSERT
 ON magasin FOR EACH ROW
@@ -118,7 +118,7 @@ BEGIN
     FROM produit;
 END;
 
--- Trigger 2: After a new produit is created
+-- Trigger 2: Creer un stock pour un nouveau produit
 CREATE TRIGGER insert_zero_stock_for_new_produit
 AFTER INSERT
 ON produit FOR EACH ROW
@@ -128,10 +128,25 @@ BEGIN
     FROM magasin;
 END;
 
+-- Trigger 3: Mettre à jour les stocks lors du passage d'une commande au statut "CC"
+CREATE TRIGGER update_stock
+AFTER UPDATE ON commande
+FOR EACH ROW
+BEGIN
+  IF NEW.commande_etat = 'CC' THEN
+    UPDATE stocks
+    SET stock_qte = stock_qte - (
+            SELECT composition_quantite 
+            FROM compositionbouquet 
+            WHERE bouquet_id = NEW.bouquet_id AND produit_id = produit_id
+        )
+    WHERE produit_id IN (SELECT produit_id FROM compositionbouquet WHERE bouquet_id = NEW.bouquet_id) AND magasin_id = NEW.magasin_id;
+  END IF;
+END;
+
 -- 
 -- INSERTS
 --
-
 
 -- Bouquets/Produits/Compositions
 INSERT INTO bouquet (bouquet_id, bouquet_nom, bouquet_prix, bouquet_description, bouquet_categorie) VALUES
@@ -168,7 +183,6 @@ INSERT INTO compositionbouquet (bouquet_id, produit_id, composition_quantite) VA
 (5, 1, 5), -- Vive la mariée avec lys
 (5, 7, 3); -- Vive la mariée avec orchidées
 
-
 -- Réductions
 INSERT INTO reduction(reduction_id, reduction_nom, reduction_commandes_mois, reduction_valeur)
 VALUES
@@ -177,8 +191,44 @@ VALUES
 (3, 'Fidélité - OR', 1, 0.15);
 
 -- Magasins/employés
+INSERT INTO magasin (magasin_id, magasin_nom, magasin_adresse) VALUES
+(1, 'Michel et une Belle de nuit', '5 Rue des Roses, 75001 Paris'),
+(2, 'Le Pétale Rieur', '20 Rue des Lilas, 69002 Lyon'),
+(3, 'La Fleur qui Fait Plaisir', '10 Rue des Iris, 33000 Bordeaux');
 
+INSERT INTO employe (employe_id, employe_proprietaire, employe_email, employe_pass, employe_prenom, employe_nom, magasin_id) VALUES
+(1, true, 'michel@bellefleur.fr', 'motdepasse123', 'Michel', 'Bellefleur', 1),
+(2, false, 'julien@bellefleur.fr', 'julien123', 'Julien', 'Leroy', 1),
+(3, false, 'marie@bellefleur.fr', 'marie123', 'Marie', 'Dubois', 1),
+(4, false, 'antoine@bellefleur.fr', 'antoine123', 'Antoine', 'Dupont', 2),
+(5, false, 'claire@bellefleur.fr', 'claire123', 'Claire', 'Martin', 2),
+(6, false, 'mathieu@bellefleur.fr', 'mathieu123', 'Mathieu', 'Girard', 2),
+(7, false, 'olivia@bellefleur.fr', 'olivia123', 'Olivia', 'Rousseau', 3);
 
 --
 -- PROCEDURES
 -- 
+DELIMITER $$
+-- On change le délimiteur pour pouvoir utiliser le ; dans les procédures
+
+-- Procedure 1: Récupère la réduction en fonction du nombre de commandes du client le mois précédent
+CREATE PROCEDURE get_reduction_client(client_id_param INT)
+BEGIN
+    -- Variables
+    DECLARE commandes INT;
+    -- Compter le nombre de commandes du client le mois précédent
+    SELECT COUNT(*) AS commandes
+    FROM commande
+    WHERE client_id = client_id_param
+        AND commande_date_creation >= DATE_SUB(NOW(), INTERVAL 30 DAY);
+        
+    -- Trouver la meilleure réduction disponible pour le nombre de commandes
+    SELECT *
+    FROM reduction
+    WHERE reduction_commandes_mois <= commandes
+    ORDER BY reduction_commandes_mois DESC
+    LIMIT 1;
+END$$
+
+
+DELIMITER ;
