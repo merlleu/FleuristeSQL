@@ -16,7 +16,7 @@ USE BelleFleur;
 -- 
 
 CREATE TABLE client (
-    client_id int NOT NULL PRIMARY KEY,
+    client_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     client_prenom VARCHAR(50),
     client_nom VARCHAR(50),
     client_email varchar(50),
@@ -26,20 +26,20 @@ CREATE TABLE client (
 );
 
 CREATE TABLE reduction (
-    reduction_id int NOT NULL PRIMARY KEY,
+    reduction_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     reduction_nom varchar(50), 
     reduction_commandes_mois int, 
     reduction_valeur decimal
 );
 
 CREATE TABLE magasin (
-    magasin_id int NOT NULL PRIMARY KEY,
+    magasin_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     magasin_nom VARCHAR(50),
     magasin_adresse VARCHAR(255)
 );
 
 CREATE TABLE bouquet (
-    bouquet_id int NOT NULL PRIMARY KEY,
+    bouquet_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     bouquet_nom VARCHAR(50),
     bouquet_prix decimal,
     bouquet_description VARCHAR(255),
@@ -47,7 +47,7 @@ CREATE TABLE bouquet (
 );
 
 CREATE TABLE commande (
-    commande_id int NOT NULL PRIMARY KEY,
+    commande_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     commande_adresse_livraison VARCHAR(255),
     commande_date_livraison_desiree datetime,
     commande_etat ENUM('VINV', 'CC', 'CPAV', 'CAL', 'CL'),
@@ -63,7 +63,7 @@ CREATE TABLE commande (
 );
 
 CREATE TABLE produit (
-    produit_id int NOT NULL PRIMARY KEY,
+    produit_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     produit_nom varchar(50),
     produit_type ENUM('fleur', 'accessoire'),
     produit_prix decimal,
@@ -72,7 +72,7 @@ CREATE TABLE produit (
 );
 
 CREATE TABLE employe (
-    employe_id int NOT NULL PRIMARY KEY,
+    employe_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
     employe_proprietaire bool,
     employe_email varchar(50),
     employe_pass VARCHAR(200),

@@ -74,17 +74,21 @@ public class Client
         return MotDePasse == password;
     }
 
-    public static void InsertClient(Client client)
+    public void InsertClient()
     {
         var command = DB.GetCommand();
         command.CommandText = "INSERT INTO client (client_prenom, client_nom, client_email, client_adresse, client_carte_de_credit, client_pass) VALUES (@Prenom, @Nom, @Email, @Adresse, @CarteDeCredit, @MotDePasse)";
-        command.Parameters.AddWithValue("@Prenom", client.Prenom);
-        command.Parameters.AddWithValue("@Nom", client.Nom);
-        command.Parameters.AddWithValue("@Email", client.Email);
-        command.Parameters.AddWithValue("@Adresse", client.Adresse);
-        command.Parameters.AddWithValue("@CarteDeCredit", client.CarteDeCredit);
-        command.Parameters.AddWithValue("@MotDePasse", client.MotDePasse);
+        command.Parameters.AddWithValue("@Prenom", Prenom);
+        command.Parameters.AddWithValue("@Nom", Nom);
+        command.Parameters.AddWithValue("@Email", Email);
+        command.Parameters.AddWithValue("@Adresse", Adresse);
+        command.Parameters.AddWithValue("@CarteDeCredit", CarteDeCredit);
+        command.Parameters.AddWithValue("@MotDePasse", MotDePasse);
 
         command.ExecuteNonQuery();
+
+        Id = Convert.ToInt32(command.LastInsertedId);
     }
+
+    public string NomComplet => $"{Prenom} {Nom}";
 }

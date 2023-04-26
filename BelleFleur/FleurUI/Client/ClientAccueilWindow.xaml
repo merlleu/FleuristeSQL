@@ -1,0 +1,26 @@
+<Window x:Class="FleurUI.ClientAccueilWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Client - Accueil" Height="300" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <!-- En-tête -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+            <TextBlock Text="Nom : " VerticalAlignment="Center"/>
+            <TextBox x:Name="NomTextBox" Width="120" Margin="5"/>
+            <TextBlock Text="Prénom : " VerticalAlignment="Center"/>
+            <TextBox x:Name="PrenomTextBox" Width="120" Margin="5"/>
+        </StackPanel>
+
+        <!-- Boutons -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10">
+            <Button Content="Mes commandes" Margin="5" Click="MesCommandes_Click"/>
+            <Button Content="Nouvelle commande" Margin="5" Click="NouvelleCommande_Click"/>
+            <Button Content="Déconnexion" Margin="5" Click="Deconnexion_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

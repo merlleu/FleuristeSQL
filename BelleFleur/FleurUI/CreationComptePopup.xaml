@@ -93,7 +93,7 @@
 
           <StackPanel Grid.Row="7" HorizontalAlignment="Center">
               <TextBlock Text="Mot De Passe" />
-              <TextBox x:Name="tbMotDePasse" Margin="5" />
+              <PasswordBox x:Name="tbMotDePasse" Width="300" Height="30" Margin="5"/>
           </StackPanel>
       
           <StackPanel Grid.Row="8" HorizontalAlignment="Center">

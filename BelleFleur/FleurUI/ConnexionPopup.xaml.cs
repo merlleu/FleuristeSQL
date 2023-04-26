@@ -27,13 +27,21 @@ namespace FleurUI
 
         public void BtnSeConnecter_Click(object sender, RoutedEventArgs e)
         {
+            BelleFleurLib.Connexion c = null;
             try {
-                var c = new BelleFleurLib.Connexion(tbEmail.Text, tbMotDePasse.Password);
+                c = new BelleFleurLib.Connexion(tbEmail.Text, tbMotDePasse.Password);
             }
             catch (Exception err) {
                 tbMessageErreur.Text = err.ToString();
                 tbMessageErreur.Visibility = Visibility.Visible;
+                return;
             }
+
+            if (c.isEmploye) return;
+
+            var h = new ClientAccueilWindow(c.client);
+            h.Show();
+            this.Close();
         }
 
         public void BtnCreerCompte_Click(object sender, RoutedEventArgs e)

@@ -10,4 +10,10 @@
   <ItemGroup>
     <ProjectReference Include="..\BelleFleurLib\BelleFleurLib.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="BelleFleur.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

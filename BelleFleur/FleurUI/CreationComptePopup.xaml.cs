@@ -34,7 +34,19 @@ namespace FleurUI
 
         public void BtnCreerCompte_Click(object sender, RoutedEventArgs e)
         {
+            BelleFleurLib.Client c = null;
+            try {
+                c = new BelleFleurLib.Client(0, tbPrenom.Text, tbNom.Text, tbAdresseMail.Text, tbAdresse.Text, tbCodeCarteCredit.Text, tbMotDePasse.Password);
+                c.InsertClient();
+            } catch (Exception err) {
+                tbMessageErreur.Text = err.ToString();
+                tbMessageErreur.Visibility = Visibility.Visible;
+                return;
+            }
 
+            var h = new ClientAccueilWindow(c);
+            h.Show();
+            this.Close();
         }
     }
 }

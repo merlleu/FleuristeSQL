@@ -3,17 +3,17 @@
 using System;
 
 public class Connexion {
-    bool isEmployee = false;
-    Client client = null;
-    Employe employe = null;
+    public bool isEmploye = false;
+    public Client client = null;
+    public Employe employe = null;
 
     public Connexion(string email, string password) {
         // si @bellefleur.fr, employe
         // sinon, client
         email = email.ToLower();
-        isEmployee = email.EndsWith("@bellefleur.fr");
+        isEmploye = email.EndsWith("@bellefleur.fr");
 
-        if (isEmployee) {
+        if (isEmploye) {
             ConnectEmployee(email, password);
         } else {
             ConnectClient(email, password);
