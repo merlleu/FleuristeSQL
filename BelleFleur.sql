@@ -1,9 +1,8 @@
 -- Table of content
 -- 1. Init
 -- 2. Schema
--- 3. Triggers
+-- 3. Triggers/Procedures
 -- 4. Inserts
--- 5. Procedures
 
 -- 
 -- INIT
@@ -36,7 +35,7 @@ CREATE TABLE reduction (
 CREATE TABLE magasin (
     magasin_id int NOT NULL PRIMARY KEY,
     magasin_nom VARCHAR(50),
-    magasin_adresse VARCHAR(255),
+    magasin_adresse VARCHAR(255)
 );
 
 CREATE TABLE bouquet (
@@ -53,8 +52,6 @@ CREATE TABLE commande (
     commande_date_livraison_desiree datetime,
     commande_etat ENUM('VINV', 'CC', 'CPAV', 'CAL', 'CL'),
     commande_date_creation datetime,
-    commande_prix decimal,
-    commande_reduction decimal,
     client_id int,
     bouquet_id int,
     magasin_id int,
@@ -71,7 +68,7 @@ CREATE TABLE produit (
     produit_type ENUM('fleur', 'accessoire'),
     produit_prix decimal,
     produit_categorie ENUM('Fleur Classique', 'Fleur exotique', 'Accessoire'),
-    produit_disponibilite_mois VARCHAR(50), -- "1,2,3,9,10,11,12" / "*"
+    produit_disponibilite_mois VARCHAR(50) -- "1,2,3,9,10,11,12" / "*"
 );
 
 CREATE TABLE employe (
@@ -105,32 +102,60 @@ CREATE TABLE stocks (
 );
 
 -- 
--- TRIGGERS
+-- TRIGGERS/PROCEDURES
 --
+
+-- On change le délimiteur pour pouvoir utiliser le ; dans les procédures
+DELIMITER $$
+
+
+-- Procedure 1: Récupère la réduction en fonction du nombre de commandes du client le mois précédent
+CREATE PROCEDURE get_reduction_client(client_id_param INT)
+BEGIN
+    -- Variables
+    DECLARE commandes INT;
+    -- Compter le nombre de commandes du client le mois précédent
+    SELECT COUNT(*) AS commandes
+    FROM commande
+    WHERE client_id = client_id_param
+        AND commande_date_creation >= DATE_SUB(NOW(), INTERVAL 30 DAY);
+        
+    -- Trouver la meilleure réduction disponible pour le nombre de commandes
+    SELECT *
+    FROM reduction
+    WHERE reduction_commandes_mois <= commandes
+    ORDER BY reduction_commandes_mois DESC
+    LIMIT 1;
+END$$
+
+
 
 -- Trigger 1: Creer un stock pour un nouveau magasin
 CREATE TRIGGER insert_zero_stock_for_new_magasin
 AFTER INSERT
-ON magasin FOR EACH ROW
+ON magasin 
+FOR EACH ROW
 BEGIN
     INSERT INTO stocks (magasin_id, produit_id, stock_qte, stock_qte_minimum)
     SELECT NEW.magasin_id, produit.produit_id, 0, 0
     FROM produit;
-END;
+END$$
 
 -- Trigger 2: Creer un stock pour un nouveau produit
 CREATE TRIGGER insert_zero_stock_for_new_produit
 AFTER INSERT
-ON produit FOR EACH ROW
+ON produit 
+FOR EACH ROW
 BEGIN
     INSERT INTO stocks (magasin_id, produit_id, stock_qte, stock_qte_minimum)
     SELECT magasin.magasin_id, NEW.produit_id, 0, 0
     FROM magasin;
-END;
+END$$
 
 -- Trigger 3: Mettre à jour les stocks lors du passage d'une commande au statut "CC"
 CREATE TRIGGER update_stock
-AFTER UPDATE ON commande
+AFTER UPDATE 
+ON commande
 FOR EACH ROW
 BEGIN
   IF NEW.commande_etat = 'CC' THEN
@@ -142,7 +167,9 @@ BEGIN
         )
     WHERE produit_id IN (SELECT produit_id FROM compositionbouquet WHERE bouquet_id = NEW.bouquet_id) AND magasin_id = NEW.magasin_id;
   END IF;
-END;
+END$$
+
+DELIMITER ;
 
 -- 
 -- INSERTS
@@ -171,7 +198,6 @@ INSERT INTO compositionbouquet (bouquet_id, produit_id, composition_quantite) VA
 (1, 4, 3), -- Gros Merci avec marguerites
 (1, 8, 2), -- Gros Merci avec verdure
 (2, 5, 6), -- L'amoureux avec roses rouges
-(2, 5, 4), -- L'amoureux avec roses blanches
 (3, 2, 3), -- L'Exotique avec ginger
 (3, 4, 4), -- L'Exotique avec marguerites
 (3, 9, 2), -- L'Exotique avec oiseaux du paradis
@@ -197,38 +223,10 @@ INSERT INTO magasin (magasin_id, magasin_nom, magasin_adresse) VALUES
 (3, 'La Fleur qui Fait Plaisir', '10 Rue des Iris, 33000 Bordeaux');
 
 INSERT INTO employe (employe_id, employe_proprietaire, employe_email, employe_pass, employe_prenom, employe_nom, magasin_id) VALUES
-(1, true, 'michel@bellefleur.fr', 'motdepasse123', 'Michel', 'Bellefleur', 1),
-(2, false, 'julien@bellefleur.fr', 'julien123', 'Julien', 'Leroy', 1),
-(3, false, 'marie@bellefleur.fr', 'marie123', 'Marie', 'Dubois', 1),
-(4, false, 'antoine@bellefleur.fr', 'antoine123', 'Antoine', 'Dupont', 2),
-(5, false, 'claire@bellefleur.fr', 'claire123', 'Claire', 'Martin', 2),
-(6, false, 'mathieu@bellefleur.fr', 'mathieu123', 'Mathieu', 'Girard', 2),
-(7, false, 'olivia@bellefleur.fr', 'olivia123', 'Olivia', 'Rousseau', 3);
-
---
--- PROCEDURES
--- 
-DELIMITER $$
--- On change le délimiteur pour pouvoir utiliser le ; dans les procédures
-
--- Procedure 1: Récupère la réduction en fonction du nombre de commandes du client le mois précédent
-CREATE PROCEDURE get_reduction_client(client_id_param INT)
-BEGIN
-    -- Variables
-    DECLARE commandes INT;
-    -- Compter le nombre de commandes du client le mois précédent
-    SELECT COUNT(*) AS commandes
-    FROM commande
-    WHERE client_id = client_id_param
-        AND commande_date_creation >= DATE_SUB(NOW(), INTERVAL 30 DAY);
-        
-    -- Trouver la meilleure réduction disponible pour le nombre de commandes
-    SELECT *
-    FROM reduction
-    WHERE reduction_commandes_mois <= commandes
-    ORDER BY reduction_commandes_mois DESC
-    LIMIT 1;
-END$$
-
-
-DELIMITER ;
+(1, true, 'michel@bellefleur.fr', 'fleur', 'Michel', 'Bellefleur', 1),
+(2, false, 'julien@bellefleur.fr', 'fleur', 'Julien', 'Leroy', 1),
+(3, false, 'marie@bellefleur.fr', 'fleur', 'Marie', 'Dubois', 1),
+(4, false, 'antoine@bellefleur.fr', 'fleur', 'Antoine', 'Dupont', 2),
+(5, false, 'claire@bellefleur.fr', 'fleur', 'Claire', 'Martin', 2),
+(6, false, 'mathieu@bellefleur.fr', 'fleur', 'Mathieu', 'Girard', 2),
+(7, false, 'olivia@bellefleur.fr', 'fleur', 'Olivia', 'Rousseau', 3);
