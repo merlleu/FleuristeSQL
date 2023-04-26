@@ -76,15 +76,43 @@ public class Produit
     }
 }
 
-public class StockParMagasin {
+public class StockAlerte {
     public Magasin Magasin { get; set; }
+    public Produit Produit { get; set; }
     public int Quantite { get; set; }
+    public int QteMin { get; set; }
 
-    public StockParMagasin(MySqlDataReader reader)
+    public StockAlerte(MySqlDataReader reader)
     {
-        Magasin = Magasin.GetMagasin(Convert.ToInt32(reader["magasin_id"]));
-        Quantite = Convert.ToInt32(reader["stock_quantite"]);
+        Produit = new Produit(reader);
+        Magasin = new Magasin(reader);
+        Quantite = Convert.ToInt32(reader["stock_qte"]);
+        QteMin = Convert.ToInt32(reader["stock_qte_minimum"]);
     }
 
-    
+    public static List<StockAlerte> GetAll() {
+        var stockAlertes = new List<StockAlerte>();
+        var command = DB.GetCommand();
+
+        command.CommandText = @"
+            SELECT stocks.*,produit.*, magasin.*  
+            FROM stocks 
+            INNER JOIN produit ON stocks.produit_id = produit.produit_id 
+            INNER JOIN magasin ON stocks.magasin_id = magasin.magasin_id 
+            WHERE stock_qte < stock_qte_minimum";
+
+        var reader = command.ExecuteReader();
+
+        while (reader.Read())
+        {
+            var stockAlerte = new StockAlerte(reader);
+            stockAlertes.Add(stockAlerte);
+        }
+
+        reader.Close();
+
+        return stockAlertes;
+    }
+
+
 }

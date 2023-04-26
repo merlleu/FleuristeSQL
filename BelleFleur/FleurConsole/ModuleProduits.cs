@@ -9,6 +9,35 @@ public class ModuleProduits {
 
     public ModuleProduits() {}
 
+    public void AfficherAlertesStocks() {
+        Console.Clear();
+
+        Console.WriteLine("ALERTES STOCKS");
+        Console.WriteLine("Sélectionnez un produit en alerte pour y accéder.");
+
+        var alertes = StockAlerte.GetAll();
+
+        int i = 1;
+        Console.WriteLine("0. Retour");
+
+        foreach (var alerte in alertes) {
+            Console.WriteLine($"{i}. {alerte.Magasin.Nom} - {alerte.Produit.Nom} - {alerte.Quantite}/{alerte.QteMin}");
+            i++;
+        }
+
+        int choice = InputsHelper.Int("Choix", 0, alertes.Count);
+
+        if (choice == 0) {
+            return;
+        }
+
+        var alerteSelected = alertes[choice - 1];
+        this.magasin = alerteSelected.Magasin;
+        
+        // AfficherProduit(alerteSelected.Produit);
+        AfficherAlertesStocks();
+    }
+
     public void AfficherProduitMagasins() {
         Console.Clear();
 

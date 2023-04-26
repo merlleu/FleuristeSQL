@@ -214,7 +214,7 @@ INSERT INTO reduction(reduction_id, reduction_nom, reduction_commandes_mois, red
 VALUES
 (1, 'Fidélité - Normal', 0, 0.0),
 (2, 'Fidélité - Bronze', 1, 0.05),
-(3, 'Fidélité - OR', 1, 0.15);
+(3, 'Fidélité - OR', 5, 0.15);
 
 -- Magasins/employés
 INSERT INTO magasin (magasin_id, magasin_nom, magasin_adresse) VALUES

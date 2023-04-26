@@ -128,13 +128,13 @@ public class ModuleConnect {
         Console.WriteLine();
 
         // Read the email and password from the user
-        string email = InputsHelper.Text("Adresse Email", 3, 16);
-        string motDePasse = InputsHelper.Text("Mot de passe", 3, 16, true);
-        string nom = InputsHelper.Text("Nom", 3, 16);
-        string prenom = InputsHelper.Text("Prénom", 3, 16);
-        string adresse = InputsHelper.Text("Adresse", 3, 16);
-        string telephone = InputsHelper.Text("Téléphone", 3, 16);
-        string carteDeCredit = InputsHelper.Text("Carte de crédit", 3, 16);
+        string email = InputsHelper.Text("Adresse Email", 3, 50);
+        string motDePasse = InputsHelper.Text("Mot de passe", 3, 50, true);
+        string nom = InputsHelper.Text("Nom", 3, 50);
+        string prenom = InputsHelper.Text("Prénom", 3, 50);
+        string adresse = InputsHelper.Text("Adresse", 3, 255);
+        string telephone = InputsHelper.Text("Téléphone", 3, 50);
+        string carteDeCredit = InputsHelper.Text("Carte de crédit", 3, 50);
 
         try {
             Client client = new Client(0, prenom, nom, email, adresse, carteDeCredit, motDePasse);

@@ -2,9 +2,10 @@ namespace FleurConsole {
 
     using System;
 
+    /// <summary>
+    /// Classe pour gérer les entrées utilisateur et les valider automatiquement
+    /// </summary>
     public class InputsHelper {
-
-        // Method to read an integer input from the user
         public static int Int(string Nom, int min, int max) {
 
             // Prompt the user to enter an integer within the specified range
@@ -69,7 +70,6 @@ namespace FleurConsole {
             return Decimal(Nom, min, max);
         }
 
-        // Method to read a string input from the user
         public static string Text(string Nom, int min, int max, bool password=false) {
 
             // Prompt the user to enter a string within the specified length range
@@ -162,6 +162,6 @@ namespace FleurConsole {
                 Console.WriteLine($"Entrée invalide. La longueur de {Nom} doit être comprise entre {min} et {max} caractères (trouvé {input.Length}).");
                 return Email(Nom, min, max);
             }
-        }
+        }    
     }
 }

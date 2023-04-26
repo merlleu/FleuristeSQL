@@ -23,6 +23,8 @@ public class ModuleCommandes {
         commande.DateLivraisonDesiree = InputsHelper.Date("Date de livraison", DateTime.Now, DateTime.Now.AddYears(1));
         commande.AdresseLivraison = InputsHelper.Text("Adresse de livraison", 1, 255);
 
+        Console.WriteLine("\nChoix du magasin :");
+        
         var magasins = Magasin.GetMagasins();
         for (int i = 0; i < magasins.Count; i++) {
             Console.WriteLine((i + 1) + ". " + magasins[i].Nom + " (" + magasins[i].Adresse + ")");
@@ -76,7 +78,7 @@ public class ModuleCommandes {
     public void CommandePersonnalisee() {
         Console.Clear();
         Console.WriteLine("Commande personnalisée");
-        var message = InputsHelper.Text("Message",0, 255);
+        var message = InputsHelper.Text("Description",0, 255);
         if (message == "") {
             return;
         }
