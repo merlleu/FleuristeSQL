@@ -7,7 +7,7 @@
      mc:Ignorable="d"
      Title="Bellefleur - Créer un compte"
      WindowStartupLocation="CenterScreen"
-     Width="400" Height="500">
+     Width="400" Height="700">
      <Window.Resources>
           <Style TargetType="Button">
               <Setter Property="Margin" Value="10" />
@@ -53,6 +53,8 @@
               <RowDefinition Height="Auto" />
               <RowDefinition Height="Auto" />
               <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="Auto" />
           </Grid.RowDefinitions>
       
           <StackPanel Grid.Row="0" HorizontalAlignment="Center" Margin="0,20,0,0">
@@ -88,16 +90,21 @@
               <TextBlock Text="Adresse" />
               <TextBox x:Name="tbAdresse" Margin="5" />
           </StackPanel>
-      
+
           <StackPanel Grid.Row="7" HorizontalAlignment="Center">
+              <TextBlock Text="Mot De Passe" />
+              <TextBox x:Name="tbMotDePasse" Margin="5" />
+          </StackPanel>
+      
+          <StackPanel Grid.Row="8" HorizontalAlignment="Center">
               <Button Content="Créer le compte" Click="BtnCreerCompte_Click" />
           </StackPanel>
       
-          <StackPanel Grid.Row="4" HorizontalAlignment="Center">
-            <TextBlock Text="Vous n'avez pas de compte ?" />
-            <Button Content="Créer un compte" Click="BtnCreerCompte_Click" />
+          <StackPanel Grid.Row="9" HorizontalAlignment="Center">
+            <TextBlock Text="Déjà un compte ?" />
+            <Button Content="Se connecter" Click="BtnSeConnecter_Click" />
         </StackPanel>
-        <StackPanel Grid.Row="5" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="10" HorizontalAlignment="Center">
             <TextBlock Text="Erreur." Style="{StaticResource ErrorMessage}" x:Name="tbMessageErreur" />
         </StackPanel>
     </Grid>

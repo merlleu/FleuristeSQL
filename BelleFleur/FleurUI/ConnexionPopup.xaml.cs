@@ -12,11 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BelleFleurLib;
 
 namespace FleurUI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ConnexionPopup.xaml
     /// </summary>
     public partial class ConnexionPopup : Window
     {
@@ -27,12 +28,14 @@ namespace FleurUI
 
         public void BtnSeConnecter_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         public void BtnCreerCompte_Click(object sender, RoutedEventArgs e)
         {
-
+            ConnexionPopup connexionPopup = new ConnexionPopup();
+            connexionPopup.Show();
+            this.Close();
         }
     }
 }

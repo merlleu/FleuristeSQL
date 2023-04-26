@@ -16,18 +16,20 @@ using System.Windows.Shapes;
 namespace FleurUI
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for CreationComptePopup.xaml
     /// </summary>
-    public partial class ConnexionPopup : Window
+    public partial class CreationComptePopup : Window
     {
-        public ConnexionPopup()
+        public CreationComptePopup()
         {
             InitializeComponent();
         }
 
         public void BtnSeConnecter_Click(object sender, RoutedEventArgs e)
         {
-
+            CreationComptePopup creationComptePopup = new CreationComptePopup();
+            creationComptePopup.Show();
+            this.Close();
         }
 
         public void BtnCreerCompte_Click(object sender, RoutedEventArgs e)
