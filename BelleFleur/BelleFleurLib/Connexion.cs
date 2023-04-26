@@ -1,4 +1,6 @@
-﻿using System;
+﻿namespace BelleFleurLib;
+
+using System;
 
 public class Connexion {
     bool isEmployee = false;

@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using BelleFleurLib;
 
 namespace FleurUI
 {
@@ -28,13 +27,19 @@ namespace FleurUI
 
         public void BtnSeConnecter_Click(object sender, RoutedEventArgs e)
         {
-            
+            try {
+                var c = new BelleFleurLib.Connexion(tbEmail.Text, tbMotDePasse.Password);
+            }
+            catch (Exception err) {
+                tbMessageErreur.Text = err.ToString();
+                tbMessageErreur.Visibility = Visibility.Visible;
+            }
         }
 
         public void BtnCreerCompte_Click(object sender, RoutedEventArgs e)
         {
-            ConnexionPopup connexionPopup = new ConnexionPopup();
-            connexionPopup.Show();
+            CreationComptePopup creationComptePopup = new CreationComptePopup();
+            creationComptePopup.Show();
             this.Close();
         }
     }

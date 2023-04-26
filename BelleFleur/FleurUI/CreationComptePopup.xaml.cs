@@ -27,8 +27,8 @@ namespace FleurUI
 
         public void BtnSeConnecter_Click(object sender, RoutedEventArgs e)
         {
-            CreationComptePopup creationComptePopup = new CreationComptePopup();
-            creationComptePopup.Show();
+            ConnexionPopup connexionPopup = new ConnexionPopup();
+            connexionPopup.Show();
             this.Close();
         }
 
