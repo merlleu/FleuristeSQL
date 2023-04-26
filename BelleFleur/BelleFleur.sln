@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BelleFleurLib", "BelleFleurLib\BelleFleurLib.csproj", "{4849BE84-0998-4742-B4DD-1A8CFB9EA4D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleurUI", "FleurUI\FleurUI.csproj", "{FEC39006-F531-4335-966C-6A72F7FE81B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{4849BE84-0998-4742-B4DD-1A8CFB9EA4D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4849BE84-0998-4742-B4DD-1A8CFB9EA4D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4849BE84-0998-4742-B4DD-1A8CFB9EA4D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC39006-F531-4335-966C-6A72F7FE81B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC39006-F531-4335-966C-6A72F7FE81B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC39006-F531-4335-966C-6A72F7FE81B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC39006-F531-4335-966C-6A72F7FE81B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
