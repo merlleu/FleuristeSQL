@@ -18,7 +18,6 @@ public class Connexion {
         } else {
             ConnectClient(email, password);
         }
-        
     }
 
     private void ConnectClient(string email, string password) {

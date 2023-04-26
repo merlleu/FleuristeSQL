@@ -75,3 +75,16 @@ public class Produit
         return false;
     }
 }
+
+public class StockParMagasin {
+    public Magasin Magasin { get; set; }
+    public int Quantite { get; set; }
+
+    public StockParMagasin(MySqlDataReader reader)
+    {
+        Magasin = Magasin.GetMagasin(Convert.ToInt32(reader["magasin_id"]));
+        Quantite = Convert.ToInt32(reader["stock_quantite"]);
+    }
+
+    
+}

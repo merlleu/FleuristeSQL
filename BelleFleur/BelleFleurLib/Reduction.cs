@@ -19,23 +19,21 @@ public class Reduction
 
     public static Reduction GetReductionClient(int clientId)
     {
-        var command = DB.GetCommand();
-        command.CommandText = "get_reduction_client";
-        command.CommandType = System.Data.CommandType.StoredProcedure;
-        command.Parameters.AddWithValue("client_id_param", clientId);
-
-        var reader = command.ExecuteReader();
-
-        Reduction reduction = null;
-
-        if (reader.Read())
+        var q= DB.GetCommand();
+        q.CommandText = "SELECT * FROM reduction WHERE reduction_commandes_mois <= (SELECT COUNT(*) FROM commande WHERE commande.client_id = @ClientId AND commande_date_creation >= DATE_SUB(NOW(), INTERVAL 1 MONTH)) ORDER BY reduction_commandes_mois DESC LIMIT 1";
+            
+        q.Parameters.AddWithValue("@ClientId", clientId);
+        var r = q.ExecuteReader();
+        if (r.Read())
         {
-            reduction = new Reduction(reader);
+            var reduction = new Reduction(r);
+            r.Close();
+            return reduction;
         }
-
-        reader.Close();
-
-        return reduction;
+        else
+        {
+            r.Close();
+            return null;
+        }
     }
-
 }
